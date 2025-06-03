@@ -151,10 +151,9 @@ fun pokemonDetailTopSection(
             contentDescription = null,
             tint = Color.White,
             modifier = Modifier
-                .padding(top = 20.dp)
                 .size(36.dp)
                 .offset(16.dp, 16.dp)
-                .clickable{
+                .clickable {
                     navControler.popBackStack()
                 }
         )
@@ -346,13 +345,17 @@ fun PokemonStats(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxSize(curPercent.value)
+                .fillMaxWidth(curPercent.value)
                 .clip(CircleShape)
                 .background(statColor)
                 .padding(horizontal = 8.dp)
         ){
             Text(
-                text = (curPercent.value * statValue).toInt().toString(),
+                text = statName,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = (curPercent.value * statMaxValue).toInt().toString(),
                 fontWeight = FontWeight.Bold
             )
         }
