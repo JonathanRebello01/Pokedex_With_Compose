@@ -1,15 +1,21 @@
 package com.example.pokedexwithcompose.pokemonlist
 
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.util.Log
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import coil3.request.SuccessResult
+import coil3.toBitmap
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
 import com.example.pokedexwithcompose.repository.PokemonRepository
 import com.example.pokedexwithcompose.util.Constants.PAGE_SIZE
@@ -41,13 +47,16 @@ class PokemonListViewModel @Inject constructor(
             val result = repository.getPokemonList(PAGE_SIZE, curPage * PAGE_SIZE)
             when(result){
                 is Resource.Error<*> -> {
-                    loadError.value =result.message!!
+                    loadError.value = result.message!!
                     isLoading.value = false
+                    println("haha " + result.message)
                 }
                 is Resource.Loading<*> -> {
-
+                    print("kkkk")
                 }
                 is Resource.Success<*> -> {
+
+                    println("dsfjhuisdfhnusdjn")
                     endReached.value = curPage * PAGE_SIZE >= result.data!!.count
                     val pokedexEntries = result.data.results.mapIndexed { index, entry ->
                         val number = if(entry.url.endsWith("/")){
@@ -56,7 +65,10 @@ class PokemonListViewModel @Inject constructor(
                         else{
                             entry.url.takeLastWhile { it.isDigit() }
                         }
+
                         val url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png"
+                        Log.d("ImageURL", "URL: $url")
+                        Log.d("pokemonName", "Name: ${entry.name.capitalize(Locale.current)}")
                         PokedexListEntry(entry.name.capitalize(Locale.current) , url, number.toInt())
                     }
                     curPage++
@@ -70,7 +82,7 @@ class PokemonListViewModel @Inject constructor(
     }
 
     fun calcDominentColor(drawable: SuccessResult, onFinish: (Color) -> Unit) {
-        val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val bmp = drawable.image.toBitmap().copy(Bitmap.Config.ARGB_8888, true)
 
         Palette.from(bmp).generate { palette ->
             palette?.dominantSwatch?.rgb?.let { colorValue ->

@@ -1,8 +1,6 @@
 package com.example.pokedexwithcompose.pokemonlist
 
-import android.R.transition.fade
-import android.annotation.SuppressLint
-import android.inputmethodservice.Keyboard
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.foundation.background
@@ -53,7 +51,6 @@ import coil3.request.crossfade
 import com.example.pokedexwithcompose.R
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
 import com.plcoding.jetpackcomposepokedex.ui.theme.RobotoCondensed
-import kotlin.enums.EnumEntries
 
 @Composable
 fun PokemonListScreen(
@@ -63,14 +60,20 @@ fun PokemonListScreen(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ){
-        Column (modifier = Modifier.fillMaxWidth().padding(top = 32.dp)){
+        Column (modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 32.dp)){
             Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_international_pok_mon_logo),
                 contentDescription = "Pokemon",
-                modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(CenterHorizontally)
             )
-            SearchBar(Modifier.fillMaxWidth().padding(16.dp), "Search..."){}
+            SearchBar(Modifier
+                .fillMaxWidth()
+                .padding(16.dp), "Search..."){}
             Spacer(modifier = Modifier.height((16.dp)))
             PokemonList(navController = navController)
         }
@@ -96,8 +99,12 @@ fun SearchBar(modifier: Modifier = Modifier, hint: String = "", onSearch: (Strin
             maxLines = 1,
             singleLine = true,
             textStyle = TextStyle(color = Color.Black),
-            modifier = Modifier.fillMaxWidth().shadow(5.dp, CircleShape).background(Color.White, CircleShape).padding(horizontal = 20.dp, vertical = 12.dp)
-                .onFocusChanged{
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(5.dp, CircleShape)
+                .background(Color.White, CircleShape)
+                .padding(horizontal = 20.dp, vertical = 12.dp)
+                .onFocusChanged {
                     isHintDisplayed = !it.isFocused
                 }
         )
@@ -134,6 +141,8 @@ fun PokemonList(
     }
 }
 
+
+
 @Composable
 fun PokedexEntry(
     entry: PokedexListEntry,
@@ -150,10 +159,12 @@ fun PokedexEntry(
         modifier = modifier
             .shadow(5.dp, RoundedCornerShape(10.dp))
             .clip(RoundedCornerShape(1f))
-            .background(Brush.verticalGradient(
-                listOf(dominantColor, defaultDominantColor)
-            ))
-            .clickable{
+            .background(
+                Brush.verticalGradient(
+                    listOf(dominantColor, defaultDominantColor)
+                )
+            )
+            .clickable {
                 navController.navigate(
                     "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
                 )
@@ -164,32 +175,39 @@ fun PokedexEntry(
 
         ){
 
-            Column (
-
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+            contentAlignment = Alignment.Center
             ){
                 AsyncImage(
                     model = ImageRequest.Builder(context)
                         .data(entry.imageUrl)
                         .allowHardware(false)
                         .crossfade(true)
-                        .listener(onSuccess = {_, result ->
-                            viewModel.calcDominentColor(result){
-                                    color -> dominantColor = color
-                            }
-                        }).build(),
+                        .listener(
+                            onStart = { Log.d("ImageDebug", "Start loading") },
+                            onSuccess = { _, result ->
+                                Log.d("ImageDebug", "Image loaded")
+                                println("Result: $result")
+                                viewModel.calcDominentColor(result){
+                                        color -> dominantColor = color
+                                }},
+                            onError = { _, result ->
+                                Log.e("ImageDebug", "Error: ${result.throwable}") }
+                        )
+                        .build(),
                     contentDescription = entry.pokemonName,
-                    modifier = Modifier.size(120.dp).align(CenterHorizontally),
-                    contentScale = ContentScale.Fit,
-
-//                request = ImageRequest.Builder(LocalContext.current)
-//                    .data(entry.imageUrl)
-//                    .target{ viewModel.calcDominentColor(it as Drawable){color ->
-//                        dominantColor = color} }.build()
+                    modifier = Modifier.size(120.dp),
+                    contentScale = ContentScale.Fit
                 )
-                CircularProgressIndicator(
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.scale(0.5f)
-                )
+                if (viewModel.isLoading.value) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.scale(0.5f)
+                    )
+                }
             }
 
             Text(
@@ -203,6 +221,7 @@ fun PokedexEntry(
     }
 }
 
+
 @Composable
 fun PokedexRow(
     rowIndex: Int,
@@ -214,7 +233,7 @@ fun PokedexRow(
             PokedexEntry(
                 entry = entries[rowIndex * 2],
                 navController = navController,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             Spacer(modifier = Modifier.width(16.dp))
             if(entries.size >= rowIndex * 2+2){

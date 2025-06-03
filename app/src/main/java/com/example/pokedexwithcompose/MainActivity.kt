@@ -1,6 +1,7 @@
 package com.example.pokedexwithcompose
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
                 ){
                     composable("pokemon_list_screen"){
                         PokemonListScreen(navController = navController)
+
                     }
                     composable(
                         "pokemon_detail_screen/{dominantColor}/{pokemonName}",
