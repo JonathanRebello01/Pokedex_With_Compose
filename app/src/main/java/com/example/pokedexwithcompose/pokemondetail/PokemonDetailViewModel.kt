@@ -1,10 +1,6 @@
-package com.example.pokedexwithcompose.PokemonDetail
+package com.example.pokedexwithcompose.pokemondetail
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.pokedexwithcompose.repository.PokemonRepository
 import com.example.pokedexwithcompose.util.Resource
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
@@ -13,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.round
 

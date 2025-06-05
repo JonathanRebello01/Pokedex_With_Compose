@@ -1,6 +1,4 @@
-package com.example.pokedexwithcompose.PokemonDetail
-
-import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
+package com.example.pokedexwithcompose.pokemondetail
 
 data class PokemonDetailUIState(
     var pokemonWeightInKg: Float = 0f,
