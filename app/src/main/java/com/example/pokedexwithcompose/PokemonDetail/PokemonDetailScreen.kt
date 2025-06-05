@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter.State.Empty.painter
@@ -258,17 +259,18 @@ fun PokemonDetailDataSection(
     pokemonHeight: Int,
     sectionHeight: Dp = 80.dp
 ){
-    val PokemonWeightInKg = remember{
-        round(pokemonWeight * 100f) / 1000f
-    }
-    val pokemonHeightInMeters = remember{
-        round(pokemonHeight * 100f) / 1000f
-    }
+
+    val viewModel: PokemonDetailViewModel = hiltViewModel()
+    val state = viewModel.uiState.collectAsState().value
+
+    viewModel.setPokemonWeightInKg(pokemonWeight)
+    viewModel.setPokemonHeightInM(pokemonHeight)
+
     Row(
         modifier = Modifier.
         fillMaxWidth()
     ){
-        PokemonDetailDataItem(dataValue = PokemonWeightInKg,
+        PokemonDetailDataItem(dataValue = state.pokemonWeightInKg,
             dataUnit = "kg",
             dataIcon = painterResource(id = R.drawable.ic_weight),
             modifiter = Modifier.weight(1f)
@@ -278,7 +280,7 @@ fun PokemonDetailDataSection(
                 .size(1.dp, sectionHeight)
                 .background(Color.LightGray)
         )
-        PokemonDetailDataItem(dataValue = pokemonHeightInMeters,
+        PokemonDetailDataItem(dataValue = state.pokemonHeightInMeters,
             dataUnit = "m",
             dataIcon = painterResource(id = R.drawable.ic_height),
             modifiter = Modifier.weight(1f)
@@ -318,18 +320,23 @@ fun PokemonStats(
     animDuration: Int = 1000,
     animDelay: Int =0
 ){
-    var animationPlayed by remember{
-        mutableStateOf(false)
-    }
+
+    val viewModel: PokemonDetailViewModel = hiltViewModel()
+    val state = viewModel.uiState.collectAsState().value
+
     val curPercent = animateFloatAsState(
-        targetValue = if(animationPlayed){
+        targetValue = if(state.animationPlayed){
             statValue / statMaxValue.toFloat()
         } else 0f,
         animationSpec = tween(animDuration, animDelay)
     )
+
     LaunchedEffect(key1 = true) {
-        animationPlayed = true
+        if (!state.animationPlayed) {
+        viewModel.setAnimationPlayed(true)
+        }
     }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -367,9 +374,11 @@ fun PokemonBasicStats(
     pokemonInfo: Pokemon,
     animDelatPerItem: Int = 100
 ){
-    val maxBaseStat = remember {
-        pokemonInfo.stats.maxOf { it.base_stat }
-    }
+    val viewModel: PokemonDetailViewModel = hiltViewModel()
+    val state = viewModel.uiState.collectAsState().value
+    viewModel.setMaxBaseStat(pokemonInfo)
+
+
 
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -385,7 +394,7 @@ fun PokemonBasicStats(
                 PokemonStats(
                     statName = parseStatToAbbr(stat),
                     statValue = stat.base_stat,
-                    statMaxValue = maxBaseStat,
+                    statMaxValue = state.maxBaseStat,
                     statColor = parseStatToColor(stat),
                     animDelay = i * animDelatPerItem
                 )

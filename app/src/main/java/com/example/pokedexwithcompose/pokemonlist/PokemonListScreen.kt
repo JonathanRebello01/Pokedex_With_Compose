@@ -64,11 +64,11 @@ fun PokemonListScreen(
         Column (modifier = Modifier
             .fillMaxWidth()
             .padding(top = 32.dp)){
-            Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_international_pok_mon_logo),
                 contentDescription = "Pokemon",
                 modifier = Modifier
+                    .padding(top = 20.dp)
                     .fillMaxWidth()
                     .align(CenterHorizontally)
             )
@@ -78,7 +78,6 @@ fun PokemonListScreen(
             {
                 viewModel.searchPokemonList(it)
             }
-            Spacer(modifier = Modifier.height((16.dp)))
             PokemonList(navController = navController)
         }
     }
@@ -130,7 +129,10 @@ fun PokemonList(
     val isLoading by remember { viewModel.isLoading }
     val isSearching by remember { viewModel.isSearching }
 
-    LazyColumn (contentPadding = PaddingValues(16.dp)) {
+    LazyColumn (
+        contentPadding = PaddingValues(16.dp),
+        modifier = Modifier.padding(top = 16.dp)
+        ) {
         val itemCount = if(pokemonList.size % 2 == 0) {
             pokemonList.size / 2
         }
@@ -139,9 +141,7 @@ fun PokemonList(
         }
         items(itemCount){
             if (it >= itemCount -1 && !endReached && !isLoading && !isSearching){
-                LaunchedEffect(key1 = true) {
                     viewModel.loadPokemonPaginated()
-                }
             }
             PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
         }
@@ -209,7 +209,7 @@ fun PokedexEntry(
                     modifier = Modifier.size(120.dp),
                     contentScale = ContentScale.Fit
                 )
-                if (viewModel.isLoading.value) {
+                if (viewModel.isLoading.value){
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.scale(0.5f)
