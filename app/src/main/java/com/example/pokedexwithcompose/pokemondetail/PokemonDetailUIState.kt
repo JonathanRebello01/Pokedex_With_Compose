@@ -1,9 +1,10 @@
 package com.example.pokedexwithcompose.pokemondetail
 
+import com.example.pokedexwithcompose.util.Resource
+import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
+
 data class PokemonDetailUIState(
-    var pokemonWeightInKg: Float = 0f,
-    var pokemonHeightInMeters: Float = 0f,
     var animationPlayed: Boolean = false,
-    var maxBaseStat: Int = 0
-//    var pokemon: Pokemon
+    var maxBaseStat: Int? = 0,
+    var resourcePokemon: Resource<Pokemon>?,
 )

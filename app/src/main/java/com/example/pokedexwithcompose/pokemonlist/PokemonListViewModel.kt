@@ -1,14 +1,9 @@
 package com.example.pokedexwithcompose.pokemonlist
 
-import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.util.Log
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
@@ -17,7 +12,7 @@ import androidx.palette.graphics.Palette
 import coil3.request.SuccessResult
 import coil3.toBitmap
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
-import com.example.pokedexwithcompose.repository.PokemonRepository
+import com.example.pokedexwithcompose.data.repository.PokemonRepository
 import com.example.pokedexwithcompose.util.Constants.PAGE_SIZE
 import com.example.pokedexwithcompose.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -80,14 +75,11 @@ class PokemonListViewModel @Inject constructor(
                 is Resource.Error<*> -> {
                     loadError.value = result.message!!
                     isLoading.value = false
-                    println("haha " + result.message)
                 }
                 is Resource.Loading<*> -> {
-                    print("kkkk")
                 }
                 is Resource.Success<*> -> {
 
-                    println("dsfjhuisdfhnusdjn")
                     endReached.value = curPage * PAGE_SIZE >= result.data!!.count
                     val pokedexEntries = result.data.results.mapIndexed { index, entry ->
                         val number = if(entry.url.endsWith("/")){

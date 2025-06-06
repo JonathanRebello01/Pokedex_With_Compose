@@ -2,8 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+
+//    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.android.dagger.hilt)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
+
 }
 
 
@@ -43,15 +47,19 @@ android {
     }
 }
 
-val hiltVersion = "2.51.1"
+//val hiltVersion = "2.51.1"
 
 dependencies {
 
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.android.compiler)
 
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+
+//    implementation("com.google.dagger:hilt-android:$hiltVersion")
+//    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+//    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+//    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

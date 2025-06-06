@@ -1,4 +1,4 @@
-package com.example.pokedexwithcompose.repository
+package com.example.pokedexwithcompose.data.repository
 
 import com.example.pokedexwithcompose.data.remote.PokeApi
 import com.example.pokedexwithcompose.util.Resource

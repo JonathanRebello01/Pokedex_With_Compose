@@ -172,8 +172,14 @@ fun PokedexEntry(
                 )
             )
             .clickable {
+
+                Log.i("Teste", "${dominantColor.toArgb()}/${entry.pokemonName}")
+
                 navController.navigate(
+
                     "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
+
+
                 )
             }
 
