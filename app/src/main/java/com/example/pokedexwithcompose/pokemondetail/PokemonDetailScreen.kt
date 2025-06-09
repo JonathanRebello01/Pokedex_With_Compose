@@ -70,11 +70,8 @@ fun PokemonDetailScreen(
     val context = LocalContext.current
     var state: PokemonDetailUIState = viewModel.uiState.collectAsState().value
 
-//    LaunchedEffect(key1 = pokemonName) {
         viewModel.getPokemonInfo(pokemonName)
-//    }
 
-//    viewModel.getPokemonInfo(pokemonName)
 
     var pokemonInfo = state.resourcePokemon
 

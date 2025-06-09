@@ -31,14 +31,6 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
-    fun setMaxBaseStat(pokemonInfo: Pokemon?) {
-        _uiState.update { state ->
-            state.copy(
-                maxBaseStat = pokemonInfo?.stats?.maxOf { it.base_stat }
-            )
-        }
-    }
-
     fun getPokemonInfo(pokemonName: String) {
 
         viewModelScope.launch (){

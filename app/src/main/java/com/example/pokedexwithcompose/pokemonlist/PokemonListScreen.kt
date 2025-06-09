@@ -57,6 +57,8 @@ fun PokemonListScreen(
     navController: NavController,
     viewModel: PokemonListViewModel = hiltViewModel()
 ){
+    var state: PokemonListUIState = viewModel.uiState.collectAsState().value
+
     Surface (
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -74,24 +76,22 @@ fun PokemonListScreen(
             )
             SearchBar(Modifier
                 .fillMaxWidth()
-                .padding(16.dp), "Search...")
+                .padding(16.dp), "Search...",
+                state = state
+                )
             {
                 viewModel.searchPokemonList(it)
             }
-            PokemonList(navController = navController)
+            PokemonList(navController = navController, state = state)
         }
     }
 
 }
 
 @Composable
-fun SearchBar(modifier: Modifier = Modifier, hint: String = "", onSearch: (String) -> Unit = {}){
-    var text by remember {
-        mutableStateOf("")
-    }
-    var isHintDisplayed by remember {
-        mutableStateOf(hint != "")
-    }
+fun SearchBar(modifier: Modifier = Modifier, hint: String = "",  state: PokemonListUIState, onSearch: (String) -> Unit = {}){
+    var text = state.textSearcBar
+    var isHintDisplayed = state.isHintDisplayed
     Box(modifier = modifier){
         BasicTextField(
             value = text,
@@ -121,29 +121,29 @@ fun SearchBar(modifier: Modifier = Modifier, hint: String = "", onSearch: (Strin
 @Composable
 fun PokemonList(
     navController: NavController,
-    viewModel: PokemonListViewModel = hiltViewModel()
+    viewModel: PokemonListViewModel = hiltViewModel(),
+    state: PokemonListUIState
 ){
-    val pokemonList by remember { viewModel.pokemonList }
-    val endReached by remember { viewModel.endReached }
-    val loadError by remember { viewModel.loadError }
-    val isLoading by remember { viewModel.isLoading }
-    val isSearching by remember { viewModel.isSearching }
+    val pokemonList = state.pokemonList
+    val endReached = state.endReached
+    val loadError = state.loadError
+    val isSearching = state.isSearching
 
     LazyColumn (
         contentPadding = PaddingValues(16.dp),
         modifier = Modifier.padding(top = 16.dp)
         ) {
-        val itemCount = if(pokemonList.size % 2 == 0) {
+        val itemCount = if(pokemonList?.size?.rem(2) == 0) {
             pokemonList.size / 2
         }
         else{
-            pokemonList.size / 2 + 1
+            pokemonList?.size?.div(2)?.plus(1) ?: 0
         }
         items(itemCount){
-            if (it >= itemCount -1 && !endReached && !isLoading && !isSearching){
+            if (it >= itemCount -1 && !endReached && !state.isLoading && !isSearching){
                     viewModel.loadPokemonPaginated()
             }
-            PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
+            PokedexRow(rowIndex = it, entries = pokemonList, navController = navController, state =  state)
         }
     }
 }
@@ -155,7 +155,8 @@ fun PokedexEntry(
     entry: PokedexListEntry,
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: PokemonListViewModel = hiltViewModel()
+    viewModel: PokemonListViewModel = hiltViewModel(),
+    state: PokemonListUIState
 ){
     val defaultDominantColor = MaterialTheme.colorScheme.surface
     var dominantColor by remember { mutableStateOf(defaultDominantColor) }
@@ -215,7 +216,7 @@ fun PokedexEntry(
                     modifier = Modifier.size(120.dp),
                     contentScale = ContentScale.Fit
                 )
-                if (viewModel.isLoading.value){
+                if (state.isLoading){
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.scale(0.5f)
@@ -238,26 +239,30 @@ fun PokedexEntry(
 @Composable
 fun PokedexRow(
     rowIndex: Int,
-    entries: List<PokedexListEntry>,
-    navController: NavController
+    entries: List<PokedexListEntry>?,
+    navController: NavController,
+    state: PokemonListUIState
 ){
     Column {
         Row{
             PokedexEntry(
-                entry = entries[rowIndex * 2],
+                entry = (entries?.get(rowIndex * 2) ?: 1) as PokedexListEntry,
                 navController = navController,
                 modifier = Modifier.weight(1f),
+                state = state
             )
             Spacer(modifier = Modifier.width(16.dp))
-            if(entries.size >= rowIndex * 2+2){
-                PokedexEntry(
-                    entry = entries[rowIndex * 2+1],
-                    navController = navController,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            else{
-                Spacer(modifier = Modifier.weight(1f))
+            entries?.size?.let {
+                if(it >= rowIndex * 2+2){
+                    PokedexEntry(
+                        entry = entries.get(rowIndex * 2+1),
+                        navController = navController,
+                        modifier = Modifier.weight(1f),
+                        state = state
+                    )
+                } else{
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
