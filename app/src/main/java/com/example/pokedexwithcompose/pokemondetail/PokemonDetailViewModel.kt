@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.compose.animation.core.AnimationState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedexwithcompose.data.CurrentPokemonRepositoryImpl
 import com.example.pokedexwithcompose.data.repository.PokemonRepository
+import com.example.pokedexwithcompose.domain.pokedex.repositories.CurrentyPokemonRepository
 import com.example.pokedexwithcompose.util.Resource
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,13 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonDetailViewModel @Inject constructor(
     private val repository: PokemonRepository,
+    val currentyRepository: CurrentPokemonRepositoryImpl
 ) : ViewModel() {
+
+//    fun cleanRepository(){
+//        currentyRepository.clearData()
+//    }
+
 
     private val _uiState = MutableStateFlow(PokemonDetailUIState(animationPlayed = false, maxBaseStat =  0, resourcePokemon = null))
     val uiState: StateFlow<PokemonDetailUIState> = _uiState.asStateFlow()
@@ -66,5 +74,10 @@ class PokemonDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        currentyRepository.clearData()
     }
 }

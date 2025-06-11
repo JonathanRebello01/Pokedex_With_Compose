@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -60,13 +61,16 @@ import java.util.Locale
 
 @Composable
 fun PokemonDetailScreen(
-    dominantColor: Color,
-    pokemonName: String,
+    viewModel: PokemonDetailViewModel = hiltViewModel(),
     navController: NavController,
     topPaddind: Dp = 20.dp,
     pokemonImageSize: Dp = 200.dp,
-    viewModel: PokemonDetailViewModel = hiltViewModel(),
 ){
+    val dominantColor: Color = viewModel.currentyRepository.dominantColor
+    val pokemonName: String = viewModel.currentyRepository.getPokemon().pokemonName
+//    viewModel.cleanRepository()
+
+
     val context = LocalContext.current
     var state: PokemonDetailUIState = viewModel.uiState.collectAsState().value
 
@@ -399,17 +403,19 @@ fun PokemonBasicStats(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
-            for(i in pokemonInfo?.stats?.indices!!){
-                val stat = pokemonInfo.stats[i]
+
+            pokemonInfo?.stats?.forEachIndexed { i, stat ->
                 PokemonStats(
                     statName = parseStatToAbbr(stat),
                     statValue = stat.base_stat,
-                    statMaxValue = maxBaseStats ?: 1.0f ,
+                    statMaxValue = maxBaseStats ?: 1.0f,
                     statColor = parseStatToColor(stat),
                     animDelay = i * animDelatPerItem
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }
+
+
 
         }
 

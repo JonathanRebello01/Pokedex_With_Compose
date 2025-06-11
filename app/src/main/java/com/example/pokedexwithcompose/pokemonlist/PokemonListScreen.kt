@@ -49,15 +49,21 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.request.crossfade
 import com.example.pokedexwithcompose.R
+import com.example.pokedexwithcompose.data.local.entities.PokemonEntity
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
+import com.example.pokedexwithcompose.domain.pokedex.repositories.CurrentyPokemonRepository
 import com.plcoding.jetpackcomposepokedex.ui.theme.RobotoCondensed
 
 @Composable
 fun PokemonListScreen(
     navController: NavController,
-    viewModel: PokemonListViewModel = hiltViewModel()
+    viewModel: PokemonListViewModel = hiltViewModel(),
 ){
     var state: PokemonListUIState = viewModel.uiState.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.cleanRepository()
+    }
 
     Surface (
         color = MaterialTheme.colorScheme.background,
@@ -160,6 +166,7 @@ fun PokedexEntry(
 ){
     val defaultDominantColor = MaterialTheme.colorScheme.surface
     var dominantColor by remember { mutableStateOf(defaultDominantColor) }
+//    var dominantColor = state.dominantColor
     val context = LocalContext.current
 
     Box(
@@ -168,20 +175,33 @@ fun PokedexEntry(
             .shadow(5.dp, RoundedCornerShape(10.dp))
             .clip(RoundedCornerShape(1f))
             .background(
-                Brush.verticalGradient(
+                Brush.
+                verticalGradient(
                     listOf(dominantColor, defaultDominantColor)
                 )
             )
             .clickable {
 
-                Log.i("Teste", "${dominantColor.toArgb()}/${entry.pokemonName}")
-
-                navController.navigate(
-
-                    "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
-
-
+                val pokemon = PokemonEntity(
+                    dominantColor = dominantColor,
+                    pokemonName = entry.pokemonName,
                 )
+
+                val currentyRepository = viewModel.CurrentyRepository
+                currentyRepository.setPokemon(pokemon)
+                currentyRepository.dominantColor = dominantColor
+
+                navController.navigate("pokemon_detail_screen")
+
+
+//                Log.i("Teste", "${dominantColor.toArgb()}/${entry.pokemonName}")
+//
+//                navController.navigate(
+//
+//                    "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
+//
+//
+//                )
             }
 
     ){
@@ -207,6 +227,7 @@ fun PokedexEntry(
                                 println("Result: $result")
                                 viewModel.calcDominentColor(result){
                                         color -> dominantColor = color
+//                                    viewModel.cleanDominantColor()
                                 }},
                             onError = { _, result ->
                                 Log.e("ImageDebug", "Error: ${result.throwable}") }
@@ -234,7 +255,6 @@ fun PokedexEntry(
         }
     }
 }
-
 
 @Composable
 fun PokedexRow(

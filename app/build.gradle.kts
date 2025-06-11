@@ -54,6 +54,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.android.compiler)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
 
 //    implementation("com.google.dagger:hilt-android:$hiltVersion")

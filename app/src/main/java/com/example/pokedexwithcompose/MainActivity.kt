@@ -35,25 +35,28 @@ class MainActivity : ComponentActivity() {
 
                     }
                     composable(
-                        "pokemon_detail_screen/{dominantColor}/{pokemonName}",
-                        arguments = listOf(
-                            navArgument("dominantColor") {
-                                type = NavType.IntType
-                            },
-                            navArgument("pokemonName") {
-                                type = NavType.StringType
-                            }),
+                        "pokemon_detail_screen"
+//                                "/{dominantColor}/{pokemonName}"
+//                        arguments = listOf(
+//                            navArgument("dominantColor") {
+//                                type = NavType.IntType
+//                            },
+//                            navArgument("pokemonName") {
+//                                type = NavType.StringType
+//                            }),
                     ){
-                        val dominantColor = remember {
-                            val color = it.arguments?.getInt("dominantColor")
-                            color?.let { Color(it) } ?: Color.White
-                        }
-                        val pokemonName = remember {
-                            it.arguments?.getString("pokemonName")
-                        }
+                        PokemonDetailScreen(navController = navController)
+//                        val dominantColor = remember {
+//
+//                            val color = it.arguments?.getInt("dominantColor")
+//                            color?.let { Color(it) } ?: Color.Unspecified
+//                        }
+//                        val pokemonName = remember {
+//                            it.arguments?.getString("pokemonName")
+//                        }
                         PokemonDetailScreen(
-                            dominantColor = dominantColor,
-                            pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
+//                            dominantColor = dominantColor,
+//                            pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
                             navController = navController
                         )
                     }

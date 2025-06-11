@@ -11,5 +11,5 @@ data class PokemonListUIState (
     var loadError: String = "",
     var isLoading: Boolean = false,
     var isSearching: Boolean = false,
-    var dominantColor: Color = Color.White
+    var dominantColor: Color = Color.Unspecified
 )

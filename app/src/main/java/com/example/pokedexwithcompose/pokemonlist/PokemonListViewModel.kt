@@ -11,8 +11,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import coil3.request.SuccessResult
 import coil3.toBitmap
+import com.example.pokedexwithcompose.data.CurrentPokemonRepositoryImpl
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
 import com.example.pokedexwithcompose.data.repository.PokemonRepository
+import com.example.pokedexwithcompose.domain.pokedex.repositories.CurrentyPokemonRepository
 import com.example.pokedexwithcompose.pokemondetail.PokemonDetailUIState
 import com.example.pokedexwithcompose.util.Constants.PAGE_SIZE
 import com.example.pokedexwithcompose.util.Resource
@@ -27,9 +29,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
-    private val repository: PokemonRepository
-)
-    : ViewModel() {
+    private val repository: PokemonRepository,
+    val CurrentyRepository: CurrentPokemonRepositoryImpl
+
+): ViewModel() {
+
+    fun cleanRepository(){
+        CurrentyRepository.clearData()
+    }
+
+
 
     private val _uiState = MutableStateFlow(PokemonListUIState(
         textSearcBar = "",
@@ -39,7 +48,7 @@ class PokemonListViewModel @Inject constructor(
         loadError = "",
         isLoading = false,
         isSearching = false,
-        dominantColor = Color.White
+        dominantColor = Color.Unspecified
     ))
 
     val uiState: StateFlow<PokemonListUIState> = _uiState.asStateFlow()
@@ -175,9 +184,23 @@ class PokemonListViewModel @Inject constructor(
                 onFinish(
                     Color(colorValue)
                 )
+//                _uiState.update { state ->
+//                    state.copy(
+//                        dominantColor = Color(colorValue)
+//                    )
+//                }
             }
 
         }
     }
+
+    fun cleanDominantColor(){
+        _uiState.update { state ->
+            state.copy(
+                dominantColor = Color.Unspecified
+            )
+        }
+    }
+
 }
 
