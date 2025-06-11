@@ -1,7 +1,7 @@
 //package com.plcoding.jetpackcomposepokedex.di
 //
 //import com.example.pokedexwithcompose.data.remote.PokeApi
-//import com.example.pokedexwithcompose.data.repository.PokemonRepository
+//import com.example.pokedexwithcompose.data.pokedex.PokemonRepository
 //import com.example.pokedexwithcompose.util.Constants.BASE_URL
 //import dagger.Module
 //import dagger.Provides

@@ -1,4 +1,4 @@
-package com.example.pokedexwithcompose.pokemonerrorscreen
+package com.example.pokedexwithcompose.ui.screens.pokemonerrorscreen
 
 import android.graphics.Bitmap
 import androidx.compose.material3.MaterialTheme

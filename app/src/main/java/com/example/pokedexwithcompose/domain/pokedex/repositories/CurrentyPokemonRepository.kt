@@ -1,7 +1,7 @@
 package com.example.pokedexwithcompose.domain.pokedex.repositories
 
 import androidx.compose.ui.graphics.Color
-import com.example.pokedexwithcompose.data.local.entities.PokemonEntity
+import com.example.pokedexwithcompose.domain.pokedex.entities.PokemonEntity
 import kotlinx.coroutines.flow.StateFlow
 
 interface CurrentyPokemonRepository {

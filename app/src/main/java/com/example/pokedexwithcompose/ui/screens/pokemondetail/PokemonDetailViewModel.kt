@@ -1,14 +1,11 @@
-package com.example.pokedexwithcompose.pokemondetail
+package com.example.pokedexwithcompose.ui.screens.pokemondetail
 
 import android.util.Log
-import androidx.compose.animation.core.AnimationState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedexwithcompose.data.CurrentPokemonRepositoryImpl
-import com.example.pokedexwithcompose.data.repository.PokemonRepository
-import com.example.pokedexwithcompose.domain.pokedex.repositories.CurrentyPokemonRepository
+import com.example.pokedexwithcompose.data.pokedex.CurrentPokemonRepositoryImpl
+import com.example.pokedexwithcompose.data.pokedex.PokemonRepository
 import com.example.pokedexwithcompose.util.Resource
-import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

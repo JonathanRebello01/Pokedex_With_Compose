@@ -1,4 +1,4 @@
-package com.example.pokedexwithcompose.data.remote
+package com.example.pokedexwithcompose.data.pokedex.remote
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.PokemonList
 import retrofit2.http.GET

@@ -1,4 +1,4 @@
-package com.example.pokedexwithcompose.pokemonlist
+package com.example.pokedexwithcompose.ui.screens.pokemonlist
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -35,7 +35,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -49,9 +48,8 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.request.crossfade
 import com.example.pokedexwithcompose.R
-import com.example.pokedexwithcompose.data.local.entities.PokemonEntity
+import com.example.pokedexwithcompose.domain.pokedex.entities.PokemonEntity
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
-import com.example.pokedexwithcompose.domain.pokedex.repositories.CurrentyPokemonRepository
 import com.plcoding.jetpackcomposepokedex.ui.theme.RobotoCondensed
 
 @Composable
@@ -165,7 +163,10 @@ fun PokedexEntry(
     state: PokemonListUIState
 ){
     val defaultDominantColor = MaterialTheme.colorScheme.surface
-    var dominantColor by remember { mutableStateOf(defaultDominantColor) }
+//    var dominantColor by remember { mutableStateOf(defaultDominantColor) }
+    val dominantColors = viewModel.dominantColors.collectAsState()
+    val color = dominantColors.value[entry.number] ?: defaultDominantColor
+
 //    var dominantColor = state.dominantColor
     val context = LocalContext.current
 
@@ -177,19 +178,19 @@ fun PokedexEntry(
             .background(
                 Brush.
                 verticalGradient(
-                    listOf(dominantColor, defaultDominantColor)
+                    listOf(color, defaultDominantColor)
                 )
             )
             .clickable {
 
                 val pokemon = PokemonEntity(
-                    dominantColor = dominantColor,
+                    dominantColor = color,
                     pokemonName = entry.pokemonName,
                 )
 
                 val currentyRepository = viewModel.CurrentyRepository
                 currentyRepository.setPokemon(pokemon)
-                currentyRepository.dominantColor = dominantColor
+                currentyRepository.dominantColor = color
 
                 navController.navigate("pokemon_detail_screen")
 
@@ -226,7 +227,8 @@ fun PokedexEntry(
                                 Log.d("ImageDebug", "Image loaded")
                                 println("Result: $result")
                                 viewModel.calcDominentColor(result){
-                                        color -> dominantColor = color
+                                        color -> viewModel.setDominantColor(entry.number, color)
+
 //                                    viewModel.cleanDominantColor()
                                 }},
                             onError = { _, result ->

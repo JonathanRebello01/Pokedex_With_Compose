@@ -1,6 +1,6 @@
-package com.example.pokedexwithcompose.data.repository
+package com.example.pokedexwithcompose.data.pokedex
 
-import com.example.pokedexwithcompose.data.remote.PokeApi
+import com.example.pokedexwithcompose.data.pokedex.remote.PokeApi
 import com.example.pokedexwithcompose.util.Resource
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.PokemonList
@@ -30,4 +30,3 @@ class PokemonRepository @Inject constructor(
         return Resource.Success(response)
     }
 }
-

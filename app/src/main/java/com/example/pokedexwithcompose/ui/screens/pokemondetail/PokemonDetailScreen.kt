@@ -1,4 +1,4 @@
-package com.example.pokedexwithcompose.pokemondetail
+package com.example.pokedexwithcompose.ui.screens.pokemondetail
 
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -181,7 +180,7 @@ fun pokemonDetailTopSection(
             tint = Color.White,
             modifier = Modifier
                 .size(36.dp)
-                .offset(16.dp, 16.dp)
+                .offset(x = 16.dp, y = 50.dp)
                 .clickable {
                     navControler.popBackStack()
                 }
@@ -201,6 +200,7 @@ fun PokemonDetailStateWrapper(
                 modifier = modifier
                     .offset(y = ((-20).dp))
             )
+
         if(pokemonInfo == null) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary,

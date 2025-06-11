@@ -1,8 +1,7 @@
-package com.example.pokedexwithcompose.pokemonlist
+package com.example.pokedexwithcompose.ui.screens.pokemonlist
 
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
@@ -11,11 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import coil3.request.SuccessResult
 import coil3.toBitmap
-import com.example.pokedexwithcompose.data.CurrentPokemonRepositoryImpl
+import com.example.pokedexwithcompose.data.pokedex.CurrentPokemonRepositoryImpl
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
-import com.example.pokedexwithcompose.data.repository.PokemonRepository
-import com.example.pokedexwithcompose.domain.pokedex.repositories.CurrentyPokemonRepository
-import com.example.pokedexwithcompose.pokemondetail.PokemonDetailUIState
+import com.example.pokedexwithcompose.data.pokedex.PokemonRepository
 import com.example.pokedexwithcompose.util.Constants.PAGE_SIZE
 import com.example.pokedexwithcompose.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,12 +30,22 @@ class PokemonListViewModel @Inject constructor(
     val CurrentyRepository: CurrentPokemonRepositoryImpl
 
 ): ViewModel() {
+    private val _dominantColors = MutableStateFlow<Map<Int, Color>>(emptyMap())
+    val dominantColors: StateFlow<Map<Int, Color>> = _dominantColors
+
+    fun setDominantColor(pokemonId: Int, color: Color) {
+        _dominantColors.update { currentMap ->
+            currentMap.toMutableMap().apply {
+                this[pokemonId] = color
+            }
+        }
+    }
+
+
 
     fun cleanRepository(){
         CurrentyRepository.clearData()
     }
-
-
 
     private val _uiState = MutableStateFlow(PokemonListUIState(
         textSearcBar = "",

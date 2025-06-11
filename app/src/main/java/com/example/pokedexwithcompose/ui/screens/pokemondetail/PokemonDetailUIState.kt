@@ -1,4 +1,4 @@
-package com.example.pokedexwithcompose.pokemondetail
+package com.example.pokedexwithcompose.ui.screens.pokemondetail
 
 import com.example.pokedexwithcompose.util.Resource
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon

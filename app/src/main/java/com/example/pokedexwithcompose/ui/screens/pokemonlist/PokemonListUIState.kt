@@ -1,7 +1,8 @@
-package com.example.pokedexwithcompose.pokemonlist
+package com.example.pokedexwithcompose.ui.screens.pokemonlist
 
 import androidx.compose.ui.graphics.Color
 import com.example.pokedexwithcompose.data.models.PokedexListEntry
+import kotlinx.coroutines.flow.StateFlow
 
 data class PokemonListUIState (
     var textSearcBar: String = "",
@@ -11,5 +12,5 @@ data class PokemonListUIState (
     var loadError: String = "",
     var isLoading: Boolean = false,
     var isSearching: Boolean = false,
-    var dominantColor: Color = Color.Unspecified
+    var dominantColor: Color = Color.Unspecified,
 )

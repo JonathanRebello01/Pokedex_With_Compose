@@ -1,8 +1,8 @@
 package com.plcoding.jetpackcomposepokedex.di
 
-import com.example.pokedexwithcompose.data.CurrentPokemonRepositoryImpl
-import com.example.pokedexwithcompose.data.remote.PokeApi
-import com.example.pokedexwithcompose.data.repository.PokemonRepository
+import com.example.pokedexwithcompose.data.pokedex.CurrentPokemonRepositoryImpl
+import com.example.pokedexwithcompose.data.pokedex.remote.PokeApi
+import com.example.pokedexwithcompose.data.pokedex.PokemonRepository
 import com.example.pokedexwithcompose.domain.pokedex.repositories.CurrentyPokemonRepository
 import com.example.pokedexwithcompose.util.Constants.BASE_URL
 import dagger.Module
